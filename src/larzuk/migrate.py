@@ -6,6 +6,8 @@ from typing import List, Callable
 from types import ModuleType
 from dataclasses import dataclass
 
+from d2txt import D2TXT
+
 
 def discover_migrations(base_dir: PathLike) -> List[Migration]:
     migrations = []
@@ -29,3 +31,18 @@ class MigrationModule(ModuleType):
 class Migration:
     name: str
     module: MigrationModule
+
+
+class MigrationManager:
+    target_dir: PathLike
+
+    def __init__(self, target_dir: PathLike):
+        self.target_dir = target_dir
+
+    def apply(self, migration: Migration):
+        target_path = Path(self.target_dir, migration.module.target)
+
+        txt_file = D2TXT.load_txt(target_path)
+        migration.module.migrate(txt_file)
+
+        txt_file.to_txt(target_path)
