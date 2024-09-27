@@ -1,6 +1,7 @@
 import click
 
 from larzuk import __version__
+from larzuk.commands import command_group
 
 
 def print_version(ctx: click.Context, _, value: bool):
@@ -11,7 +12,7 @@ def print_version(ctx: click.Context, _, value: bool):
     ctx.exit()
 
 
-@click.command()
+@click.group(commands=command_group)
 @click.version_option(message='%(version)s')
 def cli():
     """A command-line tool to help user to modify game data in Python codes for Diablo II: Resurrected."""
